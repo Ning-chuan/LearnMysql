@@ -1,0 +1,352 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use test;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_test |
++----------------+
+| dept           |
+| emp            |
+| person         |
+| users          |
++----------------+
+4 rows in set (0.00 sec)
+
+mysql> create table myclass(
+    -> sid int(4),
+    -> cname va)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'va)' at line 3
+mysql> create table myclass(
+    -> cid int(4),
+    -> cname varchar(15),
+    -> loc varchar(15)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.32 sec)
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | YES  |     | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> show keys from myclass;
+Empty set (0.01 sec)
+
+mysql> alter from myclass add constraint pk_cid primary key(cid);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from myclass add constraint pk_cid primary key(cid)' at line 1
+mysql> alter table myclass add constraint pk_cid primary key(cid);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> show keys from myclass;
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| myclass |          0 | PRIMARY  |            1 | cid         | A         |           0 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+1 row in set (0.01 sec)
+
+mysql> insert into myclass values(null,'class1','xian');
+ERROR 1048 (23000): Column 'cid' cannot be null
+mysql> insert into myclass values(1,'class1','xian');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from myclass;
++-----+--------+------+
+| cid | cname  | loc  |
++-----+--------+------+
+|   1 | class1 | xian |
++-----+--------+------+
+1 row in set (0.00 sec)
+
+mysql> insert into myclass cname,loc values('class2','bejing');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'cname,loc values('class2','bejing')' at line 1
+mysql> insert into myclass(cname,loc) values('class2','bejing');
+ERROR 1364 (HY000): Field 'cid' doesn't have a default value
+mysql> alter table myclass modify cid int(4) auto_increment;
+Query OK, 1 row affected, 1 warning (0.08 sec)
+Records: 1  Duplicates: 0  Warnings: 1
+
+mysql> insert into myclass(cname,loc) values('class2','bejing');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select* from myclass;
++-----+--------+--------+
+| cid | cname  | loc    |
++-----+--------+--------+
+|   1 | class1 | xian   |
+|   2 | class2 | bejing |
++-----+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> alter table myclass change cid cid int(4);
+Query OK, 2 rows affected, 1 warning (0.07 sec)
+Records: 2  Duplicates: 0  Warnings: 1
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into myclass(cname,loc) values('class2','bejing');
+ERROR 1364 (HY000): Field 'cid' doesn't have a default value
+mysql> alter table myclass drop primary key;
+Query OK, 2 rows affected (0.06 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   |     | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table myclass modify cid null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'null' at line 1
+mysql> alter table myclass modify cid int(4) null;
+Query OK, 0 rows affected, 1 warning (0.24 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | YES  |     | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table myclass add primary key(cid);
+Query OK, 0 rows affected (0.21 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc mycladd;
+ERROR 1146 (42S02): Table 'test.mycladd' doesn't exist
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table myclass add constraint uk_cname unique key(cname);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | YES  | UNI | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> show keys from myclass;
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| myclass |          0 | PRIMARY  |            1 | cid         | A         |           0 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| myclass |          0 | uk_cname |            1 | cname       | A         |           2 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.00 sec)
+
+mysql> alter table myclsee drop uk_cname;
+ERROR 1146 (42S02): Table 'test.myclsee' doesn't exist
+mysql> alter table myclass drop uk_cname;
+ERROR 1091 (42000): Can't DROP 'uk_cname'; check that column/key exists
+mysql> alter table myclass drop index uk_cname;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table myclass add unique(cname);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | YES  | UNI | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table myclass drop index cname;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table myclass modify cname varchar(15) not null;
+Query OK, 0 rows affected (0.21 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | NO   |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table add unique(loc);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add unique(loc)' at line 1
+mysql> alter table myclass add unique(loc);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass
+    -> ;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | NO   | PRI | NULL    |       |
+| cname | varchar(15) | NO   |     | NULL    |       |
+| loc   | varchar(15) | YES  | UNI | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from myclasss;
+ERROR 1146 (42S02): Table 'test.myclasss' doesn't exist
+mysql> select * from myclass;
++-----+--------+--------+
+| cid | cname  | loc    |
++-----+--------+--------+
+|   1 | class1 | xian   |
+|   2 | class2 | bejing |
++-----+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> alter table myclass modify cname vachar(15) not null default 'wzy';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'vachar(15) not null default 'wzy'' at line 1
+mysql> alter table myclass modify cname varchar(15) not null default 'wzy';
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show keys from myclass;
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| myclass |          0 | PRIMARY  |            1 | cid         | A         |           0 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| myclass |          0 | loc      |            1 | loc         | A         |           2 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.00 sec)
+
+mysql> alter table myclass auto_increment=10;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into myclass(loc) values('shenzhen');
+ERROR 1364 (HY000): Field 'cid' doesn't have a default value
+mysql> insert into myclass(cid,loc) values(2,'shenzhen');
+ERROR 1062 (23000): Duplicate entry '2' for key 'myclass.PRIMARY'
+mysql> insert into myclass(cid,loc) values(3,'shenzhen');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from myclass;
++-----+--------+----------+
+| cid | cname  | loc      |
++-----+--------+----------+
+|   1 | class1 | xian     |
+|   2 | class2 | bejing   |
+|   3 | wzy    | shenzhen |
++-----+--------+----------+
+3 rows in set (0.00 sec)
+
+mysql> alter table myclass drop primary key;
+Query OK, 3 rows affected (0.08 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> alter talble modify cid int(4) null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'talble modify cid int(4) null' at line 1
+mysql> alter table modify cid int(4) null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'cid int(4) null' at line 1
+mysql> alter table myclass modify cid int(4) null;
+Query OK, 0 rows affected, 1 warning (0.18 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> alter table modify cname varchar(15) null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'cname varchar(15) null' at line 1
+mysql> alter table myclass modify cname varchar(15) null;
+Query OK, 0 rows affected (0.21 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table drop index loc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'drop index loc' at line 1
+mysql> alter table myclass drop index loc;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc myclass;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | int         | YES  |     | NULL    |       |
+| cname | varchar(15) | YES  |     | NULL    |       |
+| loc   | varchar(15) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql>
