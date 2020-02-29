@@ -1,0 +1,303 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 17
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cons               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
+| union_query        |
++--------------------+
+7 rows in set (0.01 sec)
+
+mysql> use union_query
+Database changed
+mysql> select * from country;
++-----+--------+
+| cid | cname  |
++-----+--------+
+|   1 | 中国   |
+|   2 | 美国   |
+|   3 | 日本   |
++-----+--------+
+3 rows in set (0.01 sec)
+
+mysql> select * from area;
++-----+-----------+------+
+| aid | aname     | cid  |
++-----+-----------+------+
+|   1 | 北方      |    1 |
+|   2 | 南方      |    1 |
+|   3 | 西部      |    2 |
+|   4 | 东部      |    2 |
+|   5 | 北海道    |    3 |
+|   6 | 四国      |    3 |
++-----+-----------+------+
+6 rows in set (0.00 sec)
+
+mysql> delect * from city;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delect * from city' at line 1
+mysql> select * from city;
++--------+-----------+----------+------+
+| cityid | cityname  | citysize | aid  |
++--------+-----------+----------+------+
+|      1 | 哈尔滨    |      750 |    1 |
+|      2 | 大连      |       50 |    1 |
+|      3 | 北京      |     2000 |    1 |
+|      4 | 上海      |     1500 |    2 |
+|      5 | 杭州      |      800 |    2 |
+|      6 | 洛杉矶    |     1200 |    3 |
+|      7 | 休斯顿    |      750 |    3 |
+|      8 | 纽约      |     1000 |    4 |
+|      9 | 底特律    |      500 |    4 |
+|     10 | 东京      |     1500 |    5 |
+|     11 | 名古屋    |       50 |    5 |
+|     12 | 大阪      |       20 |    6 |
++--------+-----------+----------+------+
+12 rows in set (0.00 sec)
+
+mysql> show keys from city;
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| city  |          0 | PRIMARY  |            1 | cityid      | A         |          11 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| city  |          1 | fk_area  |            1 | aid         | A         |           5 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++-------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.01 sec)
+
+mysql> select cityname,citysize,aname from city inner join area where city.aid=area.aid and citysize between 1000 and 2000;
++-----------+----------+-----------+
+| cityname  | citysize | aname     |
++-----------+----------+-----------+
+| 北京      |     2000 | 北方      |
+| 上海      |     1500 | 南方      |
+| 洛杉矶    |     1200 | 西部      |
+| 纽约      |     1000 | 东部      |
+| 东京      |     1500 | 北海道    |
++-----------+----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select cname,count(cityname) from city inner join area where city.aid=area.aid inner join country wherre area.cid=country.cid group by cname order by count(cityname) asc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'inner join country wherre area.cid=country.cid group by cname order by count(cit' at line 1
+mysql> select cname,count(cityname) from city inner join area where city.aid=area.aid inner join country wherre area.cid=country.cid group by cname order by cityname asc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'inner join country wherre area.cid=country.cid group by cname order by cityname ' at line 1
+mysql> select cname,count(cityname) from (city inner join area where city.aid=area.aid) inner join country wherre area.cid=country.cid group by cname order by count(cityname) asc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where city.aid=area.aid) inner join country wherre area.cid=country.cid group by' at line 1
+mysql> select cname,count(cityname) from (city inner join area where city.aid=area.aid) inner join country where area.cid=country.cid group by cname order by count(cityname) asc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where city.aid=area.aid) inner join country where area.cid=country.cid group by ' at line 1
+mysql> select cname,count(cityname) from (city inner join area where city.aid=area.aid) inner join country where area.cid=country.cid group by cname order by cityname asc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where city.aid=area.aid) inner join country where area.cid=country.cid group by ' at line 1
+mysql> select cname,count(cityname) from (city inner join area on city.aid=area.aid) inner join country on area.cid=country.cid group by cname order by cityname asc;
++--------+-----------------+
+| cname  | count(cityname) |
++--------+-----------------+
+| 日本   |               3 |
+| 中国   |               5 |
+| 美国   |               4 |
++--------+-----------------+
+3 rows in set (0.00 sec)
+
+mysql> select cname,count(cityname) from (city inner join area on city.aid=area.aid) inner join country on area.cid=country.cid group by cname order by count(cityname) asc;
++--------+-----------------+
+| cname  | count(cityname) |
++--------+-----------------+
+| 日本   |               3 |
+| 美国   |               4 |
+| 中国   |               5 |
++--------+-----------------+
+3 rows in set (0.00 sec)
+
+mysql> select cname,count(cityname) from city inner join area on city.aid=area.aid inner join country on area.cid=country.cid group by cname order by count(cityname) asc;
++--------+-----------------+
+| cname  | count(cityname) |
++--------+-----------------+
+| 日本   |               3 |
+| 美国   |               4 |
+| 中国   |               5 |
++--------+-----------------+
+3 rows in set (0.00 sec)
+
+mysql> select aid,aname,avg(citysize) from city left outer join area on city.aid=area.aid group by aid order by avg(citysize) desc;
+ERROR 1052 (23000): Column 'aid' in field list is ambiguous
+mysql> select city.aid,aname,avg(citysize) from city left outer join area on city.aid=area.aid group by aid order by avg(citysize) desc;
++------+-----------+---------------+
+| aid  | aname     | avg(citysize) |
++------+-----------+---------------+
+|    2 | 南方      |     1150.0000 |
+|    3 | 西部      |      975.0000 |
+|    1 | 北方      |      933.3333 |
+|    5 | 北海道    |      775.0000 |
+|    4 | 东部      |      750.0000 |
+|    6 | 四国      |       20.0000 |
++------+-----------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> select cityname,cname from city left outer join area on city.aid=area.aid left outer join country on area.cid=country.cid where cityname='哈尔滨';
++-----------+--------+
+| cityname  | cname  |
++-----------+--------+
+| 哈尔滨    | 中国   |
++-----------+--------+
+1 row in set (0.00 sec)
+
+mysql> select aname,sum(citysize) from city left jion area on city.aid=area.aid group by area.aid;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'jion area on city.aid=area.aid group by area.aid' at line 1
+mysql> select aname,sum(citysize) from city left join area on city.aid=area.aid group by area.aid;
++-----------+---------------+
+| aname     | sum(citysize) |
++-----------+---------------+
+| 北方      |          2800 |
+| 南方      |          2300 |
+| 西部      |          1950 |
+| 东部      |          1500 |
+| 北海道    |          1550 |
+| 四国      |            20 |
++-----------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> select cityname,cname from city left join area on city.aid=area.aid ca left join country c on ca.cid=c.cid where cname is '美国'；
+    ->
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ca left join country c on ca.cid=c.cid where cname is '美国'；' at line 1
+mysql> select cityname,cname from city left join area on city.aid=area.aid ca left join country c on ca.cid=c.cid where cname is '美国';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ca left join country c on ca.cid=c.cid where cname is '美国'' at line 1
+mysql> select cityname,cname from city left join area on city.aid=area.aid left join country c on area.cid=c.cid where cname is '美国';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''美国'' at line 1
+mysql> select cityname,cname from city left join area on city.aid=area.aid left join country c on area.cid=c.cid where cname='美国';
++-----------+--------+
+| cityname  | cname  |
++-----------+--------+
+| 洛杉矶    | 美国   |
+| 休斯顿    | 美国   |
+| 纽约      | 美国   |
+| 底特律    | 美国   |
++-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select cityname,cname from city left join area on city.aid=area.aid ca left join country c on ca.cid=c.cid where cname='美国';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ca left join country c on ca.cid=c.cid where cname='美国'' at line 1
+mysql> select cityname,citysize,cname from city left join area on city.aid=area.aid left join country on area.cid=country.cid where citysize=max(citysize);
+ERROR 1111 (HY000): Invalid use of group function
+mysql> select cityname,citysize,cname from city left join area on city.aid=area.aid left join country on area.cid=country.cid group by cityname having citysize=max(citysize);
++-----------+----------+--------+
+| cityname  | citysize | cname  |
++-----------+----------+--------+
+| 哈尔滨    |      750 | 中国   |
+| 大连      |       50 | 中国   |
+| 北京      |     2000 | 中国   |
+| 上海      |     1500 | 中国   |
+| 杭州      |      800 | 中国   |
+| 洛杉矶    |     1200 | 美国   |
+| 休斯顿    |      750 | 美国   |
+| 纽约      |     1000 | 美国   |
+| 底特律    |      500 | 美国   |
+| 东京      |     1500 | 日本   |
+| 名古屋    |       50 | 日本   |
+| 大阪      |       20 | 日本   |
++-----------+----------+--------+
+12 rows in set (0.00 sec)
+
+mysql> select cityname,citysize,cname from city left join area on city.aid=area.aid left join country on area.cid=country.cid group by cityid having citysize=max(citysize);
++-----------+----------+--------+
+| cityname  | citysize | cname  |
++-----------+----------+--------+
+| 哈尔滨    |      750 | 中国   |
+| 大连      |       50 | 中国   |
+| 北京      |     2000 | 中国   |
+| 上海      |     1500 | 中国   |
+| 杭州      |      800 | 中国   |
+| 洛杉矶    |     1200 | 美国   |
+| 休斯顿    |      750 | 美国   |
+| 纽约      |     1000 | 美国   |
+| 底特律    |      500 | 美国   |
+| 东京      |     1500 | 日本   |
+| 名古屋    |       50 | 日本   |
+| 大阪      |       20 | 日本   |
++-----------+----------+--------+
+12 rows in set (0.00 sec)
+
+mysql> select cname,sum(citysize) from city left join area on city.aid=area.aid left join country on area.cid=country.cid group by country.cid;
++--------+---------------+
+| cname  | sum(citysize) |
++--------+---------------+
+| 中国   |          5100 |
+| 美国   |          3450 |
+| 日本   |          1570 |
++--------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> select cname,cityname,citysize from city left join area on city.aid=area.aid left join country on area.cid=country.cid where citysize=1500;
++--------+----------+----------+
+| cname  | cityname | citysize |
++--------+----------+----------+
+| 中国   | 上海     |     1500 |
+| 日本   | 东京     |     1500 |
++--------+----------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select aname,sum(citysize) from city left join area on city.aid=area.aid group by area.aid;
++-----------+---------------+
+| aname     | sum(citysize) |
++-----------+---------------+
+| 北方      |          2800 |
+| 南方      |          2300 |
+| 西部      |          1950 |
+| 东部      |          1500 |
+| 北海道    |          1550 |
+| 四国      |            20 |
++-----------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> select aname,sum(citysize) from city left join area on city.aid=area.aid group by area.aid desc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc' at line 1
+mysql> select aname,sum(citysize) from city left join area on city.aid=area.aid group by area.aid order by sum(citysize) desc;
++-----------+---------------+
+| aname     | sum(citysize) |
++-----------+---------------+
+| 北方      |          2800 |
+| 南方      |          2300 |
+| 西部      |          1950 |
+| 北海道    |          1550 |
+| 东部      |          1500 |
+| 四国      |            20 |
++-----------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> select cname,sum(citysize) from city left join area on city.aid=area.aid left join country on area.cid=country.cid group by country having sum(citysize)>5000;
+ERROR 1054 (42S22): Unknown column 'country' in 'group statement'
+mysql> select cname,sum(citysize) from city left join area on city.aid=area.aid left join country on area.cid=country.cid group by country.cid having sum(citysize)>5000;
++--------+---------------+
+| cname  | sum(citysize) |
++--------+---------------+
+| 中国   |          5100 |
++--------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select cityname,citysize from city where citysize>(select citysize from city where cityname='杭州');
++-----------+----------+
+| cityname  | citysize |
++-----------+----------+
+| 北京      |     2000 |
+| 上海      |     1500 |
+| 洛杉矶    |     1200 |
+| 纽约      |     1000 |
+| 东京      |     1500 |
++-----------+----------+
+5 rows in set (0.00 sec)
+
+mysql>
