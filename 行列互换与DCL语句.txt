@@ -1,0 +1,558 @@
+Microsoft Windows [版本 10.0.18362.657]
+(c) 2019 Microsoft Corporation。保留所有权利。
+
+C:\Users\宁川>Mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 19
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cons               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
+| union_query        |
++--------------------+
+7 rows in set (0.01 sec)
+
+mysql> use test;
+Database changed
+mysql> show tables
+    -> ;
++----------------+
+| Tables_in_test |
++----------------+
+| dept           |
+| emp            |
+| myclass        |
+| person         |
+| users          |
++----------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp limit 0,5;
++-------+--------+----------+------+------------+---------+------+--------+
+| empno | ename  | job      | mgr  | hiredate   | sal     | comm | deptno |
++-------+--------+----------+------+------------+---------+------+--------+
+|  7369 | SMITH  | CLERK    | 7902 | 1980-12-17 |  800.00 | NULL |     20 |
+|  7499 | ALLEN  | SALESMAN | 7698 | 1981-02-20 | 1600.00 |  300 |     30 |
+|  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250.00 |  500 |     30 |
+|  7566 | JONES  | MANAGER  | 7839 | 1981-04-02 | 2975.00 | NULL |     20 |
+|  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250.00 | 1400 |     30 |
++-------+--------+----------+------+------------+---------+------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp limit 5,5;
++-------+--------+-----------+------+------------+---------+------+--------+
+| empno | ename  | job       | mgr  | hiredate   | sal     | comm | deptno |
++-------+--------+-----------+------+------------+---------+------+--------+
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850.00 | NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450.00 | NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000.00 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000.00 | NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500.00 |    0 |     30 |
++-------+--------+-----------+------+------------+---------+------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp limit 10,5;
++-------+--------+---------+------+------------+---------+------+--------+
+| empno | ename  | job     | mgr  | hiredate   | sal     | comm | deptno |
++-------+--------+---------+------+------------+---------+------+--------+
+|  7876 | ADAMS  | CLERK   | 7788 | 1987-05-23 | 1100.00 | NULL |     20 |
+|  7900 | JAMES  | CLERK   | 7698 | 1981-12-03 |  950.00 | NULL |     30 |
+|  7902 | FORD   | ANALYST | 7566 | 1981-12-03 | 3000.00 | NULL |     20 |
+|  7934 | MILLER | CLERK   | 7782 | 1982-01-23 | 1300.00 | NULL |     10 |
++-------+--------+---------+------+------------+---------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql> create table warehouse(
+    -> wname varchar(4),
+    -> winventory int(6),
+    -> wmonth varchar(10)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.07 sec)
+
+mysql> alter table warehouse charset utf8;
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> insert into warehouse values('A',100,'一月份');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into warehouse values('B',1000,'一月份');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into warehouse values('C',10,'一月份');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into warehouse values('A',200,'二月份');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into warehouse values('B',2000,'二月份');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into warehouse values('C',20,'二月份');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into warehouse values('A',300,'三月份');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into warehouse values('B',3000,'三月份');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into warehouse values('C',30,'三月份');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select wname,winventory,wmonth form warehouse;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'warehouse' at line 1
+mysql> select wname,winventory,wmonth from warehouse;
++-------+------------+--------+
+| wname | winventory | wmonth |
++-------+------------+--------+
+| A     |        100 | 一月份 |
+| B     |       1000 | 一月份 |
+| C     |         10 | 一月份 |
+| A     |        200 | 二月份 |
+| B     |       2000 | 二月份 |
+| C     |         20 | 二月份 |
+| A     |        300 | 三月份 |
+| B     |       3000 | 三月份 |
+| C     |         30 | 三月份 |
++-------+------------+--------+
+9 rows in set (0.00 sec)
+
+mysql> select wname,
+    -> max(if(wmonth='一月份',winventory,0)) as 一月份库存,
+    -> max(if(wmonth='二月份',winventory,0)) as 二月份库存,
+    -> max(if(wmonth='三月份',winventory,0)) as 三月份库存
+    -> from warehouse;
++-------+------------+------------+------------+
+| wname | 一月份库存 | 二月份库存 | 三月份库存 |
++-------+------------+------------+------------+
+| A     |       1000 |       2000 |       3000 |
++-------+------------+------------+------------+
+1 row in set (0.00 sec)
+
+mysql> select wname,
+    -> max(if(wmonth='一月份',winventory,0)) as 一月份库存,
+    -> max(if(wmonth='二月份',winventory,0)) as 二月份库存,
+    -> max(if(wmonth='三月份',winventory,0)) as 三月份库存
+    -> from warehouse group by wmonth;
++-------+------------+------------+------------+
+| wname | 一月份库存 | 二月份库存 | 三月份库存 |
++-------+------------+------------+------------+
+| A     |       1000 |          0 |          0 |
+| A     |          0 |       2000 |          0 |
+| A     |          0 |          0 |       3000 |
++-------+------------+------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select wname,
+    -> max(if(wmonth='一月份',winventory,0)) as 一月份库存,
+    -> max(if(wmonth='二月份',winventory,0)) as 二月份库存,
+    -> max(if(wmonth='三月份',winventory,0)) as 三月份库存
+    -> from warehouse group by wname;
++-------+------------+------------+------------+
+| wname | 一月份库存 | 二月份库存 | 三月份库存 |
++-------+------------+------------+------------+
+| A     |        100 |        200 |        300 |
+| B     |       1000 |       2000 |       3000 |
+| C     |         10 |         20 |         30 |
++-------+------------+------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cons               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
+| union_query        |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use mysql;
+Database changed
+mysql> show tables;
++---------------------------+
+| Tables_in_mysql           |
++---------------------------+
+| columns_priv              |
+| component                 |
+| db                        |
+| default_roles             |
+| engine_cost               |
+| func                      |
+| general_log               |
+| global_grants             |
+| gtid_executed             |
+| help_category             |
+| help_keyword              |
+| help_relation             |
+| help_topic                |
+| innodb_index_stats        |
+| innodb_table_stats        |
+| password_history          |
+| plugin                    |
+| procs_priv                |
+| proxies_priv              |
+| role_edges                |
+| server_cost               |
+| servers                   |
+| slave_master_info         |
+| slave_relay_log_info      |
+| slave_worker_info         |
+| slow_log                  |
+| tables_priv               |
+| time_zone                 |
+| time_zone_leap_second     |
+| time_zone_name            |
+| time_zone_transition      |
+| time_zone_transition_type |
+| user                      |
++---------------------------+
+33 rows in set (0.00 sec)
+
+mysql> select user,host,password from user;
+ERROR 1054 (42S22): Unknown column 'password' in 'field list'
+mysql> select user,host,authentication_string from user;
++------------------+-----------+------------------------------------------------------------------------+
+| user             | host      | authentication_string                                                  |
++------------------+-----------+------------------------------------------------------------------------+
+| mysql.infoschema | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| mysql.session    | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| mysql.sys        | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| root             | localhost | $A$005$|PmTAI8q      !vt#G.l@cpIm0TuwCBFHAHXBhSLLb7kSfOJQidkOI1ppwz37sGR/ |
++------------------+-----------+------------------------------------------------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> create user 'wzy'@'localhost' identified by 'wzy';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show grants for 'wzy'@'localhost';
++-----------------------------------------+
+| Grants for wzy@localhost                |
++-----------------------------------------+
+| GRANT USAGE ON *.* TO `wzy`@`localhost` |
++-----------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> grant all on *.* to 'wzy'
+    -> @'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> exit;
+Bye
+
+C:\Users\宁川>mysql -u wzy -p
+Enter password: ***
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 20
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cons               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
+| union_query        |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use mysql;
+Database changed
+mysql> show tables;
++---------------------------+
+| Tables_in_mysql           |
++---------------------------+
+| columns_priv              |
+| component                 |
+| db                        |
+| default_roles             |
+| engine_cost               |
+| func                      |
+| general_log               |
+| global_grants             |
+| gtid_executed             |
+| help_category             |
+| help_keyword              |
+| help_relation             |
+| help_topic                |
+| innodb_index_stats        |
+| innodb_table_stats        |
+| password_history          |
+| plugin                    |
+| procs_priv                |
+| proxies_priv              |
+| role_edges                |
+| server_cost               |
+| servers                   |
+| slave_master_info         |
+| slave_relay_log_info      |
+| slave_worker_info         |
+| slow_log                  |
+| tables_priv               |
+| time_zone                 |
+| time_zone_leap_second     |
+| time_zone_name            |
+| time_zone_transition      |
+| time_zone_transition_type |
+| user                      |
++---------------------------+
+33 rows in set (0.00 sec)
+
+mysql> select user,host,authentication_string from user;
++------------------+-----------+------------------------------------------------------------------------+
+| user             | host      | authentication_string                                                  |
++------------------+-----------+------------------------------------------------------------------------+
+| mysql.infoschema | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| mysql.session    | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| mysql.sys        | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| root             | localhost | $A$005$|PmTAI8q      !vt#G.l@cpIm0TuwCBFHAHXBhSLLb7kSfOJQidkOI1ppwz37sGR/ |
+| wzy              | localhost | $A$005$Y,NfP=7p%uaAAL3%Qgp1PPAPJ69Ub9wo3h3j7nQz7g4/MSiTdY7CxeFFbPt9 |
++------------------+-----------+------------------------------------------------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> revoke all on *.* from 'wzy'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cons               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
+| union_query        |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cons               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
+| union_query        |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> exit;
+Bye
+
+C:\Users\宁川>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 21
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use mysql;
+Database changed
+mysql> select user,host,authentication_string from user;
++------------------+-----------+------------------------------------------------------------------------+
+| user             | host      | authentication_string                                                  |
++------------------+-----------+------------------------------------------------------------------------+
+| mysql.infoschema | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| mysql.session    | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| mysql.sys        | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| root             | localhost | $A$005$|PmTAI8q      !vt#G.l@cpIm0TuwCBFHAHXBhSLLb7kSfOJQidkOI1ppwz37sGR/ |
+| wzy              | localhost | $A$005$Y,NfP=7p%uaAAL3%Qgp1PPAPJ69Ub9wo3h3j7nQz7g4/MSiTdY7CxeFFbPt9 |
++------------------+-----------+------------------------------------------------------------------------+
+5 rows in set (0.00 sec)
+
+mysql> exit
+Bye
+
+C:\Users\宁川>mysql -u wzy -p
+Enter password: ***
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 22
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> use information_schema;
+Database changed
+mysql> show tables;
++---------------------------------------+
+| Tables_in_information_schema          |
++---------------------------------------+
+| ADMINISTRABLE_ROLE_AUTHORIZATIONS     |
+| APPLICABLE_ROLES                      |
+| CHARACTER_SETS                        |
+| CHECK_CONSTRAINTS                     |
+| COLLATION_CHARACTER_SET_APPLICABILITY |
+| COLLATIONS                            |
+| COLUMN_PRIVILEGES                     |
+| COLUMN_STATISTICS                     |
+| COLUMNS                               |
+| ENABLED_ROLES                         |
+| ENGINES                               |
+| EVENTS                                |
+| FILES                                 |
+| INNODB_BUFFER_PAGE                    |
+| INNODB_BUFFER_PAGE_LRU                |
+| INNODB_BUFFER_POOL_STATS              |
+| INNODB_CACHED_INDEXES                 |
+| INNODB_CMP                            |
+| INNODB_CMP_PER_INDEX                  |
+| INNODB_CMP_PER_INDEX_RESET            |
+| INNODB_CMP_RESET                      |
+| INNODB_CMPMEM                         |
+| INNODB_CMPMEM_RESET                   |
+| INNODB_COLUMNS                        |
+| INNODB_DATAFILES                      |
+| INNODB_FIELDS                         |
+| INNODB_FOREIGN                        |
+| INNODB_FOREIGN_COLS                   |
+| INNODB_FT_BEING_DELETED               |
+| INNODB_FT_CONFIG                      |
+| INNODB_FT_DEFAULT_STOPWORD            |
+| INNODB_FT_DELETED                     |
+| INNODB_FT_INDEX_CACHE                 |
+| INNODB_FT_INDEX_TABLE                 |
+| INNODB_INDEXES                        |
+| INNODB_METRICS                        |
+| INNODB_SESSION_TEMP_TABLESPACES       |
+| INNODB_TABLES                         |
+| INNODB_TABLESPACES                    |
+| INNODB_TABLESPACES_BRIEF              |
+| INNODB_TABLESTATS                     |
+| INNODB_TEMP_TABLE_INFO                |
+| INNODB_TRX                            |
+| INNODB_VIRTUAL                        |
+| KEY_COLUMN_USAGE                      |
+| KEYWORDS                              |
+| OPTIMIZER_TRACE                       |
+| PARAMETERS                            |
+| PARTITIONS                            |
+| PLUGINS                               |
+| PROCESSLIST                           |
+| PROFILING                             |
+| REFERENTIAL_CONSTRAINTS               |
+| RESOURCE_GROUPS                       |
+| ROLE_COLUMN_GRANTS                    |
+| ROLE_ROUTINE_GRANTS                   |
+| ROLE_TABLE_GRANTS                     |
+| ROUTINES                              |
+| SCHEMA_PRIVILEGES                     |
+| SCHEMATA                              |
+| ST_GEOMETRY_COLUMNS                   |
+| ST_SPATIAL_REFERENCE_SYSTEMS          |
+| ST_UNITS_OF_MEASURE                   |
+| STATISTICS                            |
+| TABLE_CONSTRAINTS                     |
+| TABLE_PRIVILEGES                      |
+| TABLES                                |
+| TABLESPACES                           |
+| TRIGGERS                              |
+| USER_PRIVILEGES                       |
+| VIEW_ROUTINE_USAGE                    |
+| VIEW_TABLE_USAGE                      |
+| VIEWS                                 |
++---------------------------------------+
+73 rows in set (0.01 sec)
+
+mysql> exit;
+Bye
+
+C:\Users\宁川>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 23
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> drop user 'wzy'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> use mysql;
+Database changed
+mysql> select user,host,authentication_string from user;
++------------------+-----------+------------------------------------------------------------------------+
+| user             | host      | authentication_string                                                  |
++------------------+-----------+------------------------------------------------------------------------+
+| mysql.infoschema | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| mysql.session    | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| mysql.sys        | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| root             | localhost | $A$005$|PmTAI8q      !vt#G.l@cpIm0TuwCBFHAHXBhSLLb7kSfOJQidkOI1ppwz37sGR/ |
++------------------+-----------+------------------------------------------------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> exit;
+Bye
+
+C:\Users\宁川>
